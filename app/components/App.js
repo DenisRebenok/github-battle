@@ -1,19 +1,19 @@
 var React = require("react");
-// var Badge = require("./Badge");
 var Popular = require("./Popular");
-
-// var USER_DATA = {
-//   name: "Denys Rebenok",
-//   username: "DenisRebenok",
-//   img: "https://avatars2.githubusercontent.com/u/8539872?s=460&v=4"
-// };
+var ReactRouter = require("react-router-dom");
+var Router = ReactRouter.BrowserRouter;
+var Route = ReactRouter.Route;
+var Nav = require("./Nav");
 
 class App extends React.Component {
   render() {
     return (
-      <div id="app" className="container">
-        <Popular />
-      </div>
+      <Router>
+        <div id="app" className="container">
+          <Nav />
+          <Route path="/popular" component={Popular} />
+        </div>
+      </Router>
     );
   }
 }
