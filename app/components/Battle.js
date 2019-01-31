@@ -1,7 +1,7 @@
-var React = require("react");
-var PropTypes = require("prop-types");
-var Link = require("react-router-dom").Link;
-var PlayerPreview = require("./PlayerPreview");
+const React = require("react");
+const PropTypes = require("prop-types");
+const Link = require("react-router-dom").Link;
+const PlayerPreview = require("./PlayerPreview");
 
 class PlayerInput extends React.Component {
   constructor(props) {
@@ -15,13 +15,9 @@ class PlayerInput extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleChange(event) {
-    var value = event.target.value;
+    const value = event.target.value;
 
-    this.setState(function() {
-      return {
-        username: value
-      };
-    });
+    this.setState(() => ({ username: value }));
   }
   handleSubmit(event) {
     event.preventDefault();
@@ -29,24 +25,23 @@ class PlayerInput extends React.Component {
     this.props.onSubmit(this.props.id, this.state.username);
   }
   render() {
+    const { username } = this.state;
+    const { label } = this.props;
+
     return (
       <form className="column" onSubmit={this.handleSubmit}>
         <label htmlFor="username" className="header">
-          {this.props.label}
+          {label}
         </label>
         <input
           type="text"
           id="username"
           placeholder="github username"
           autoComplete="off"
-          value={this.state.username}
+          value={username}
           onChange={this.handleChange}
         />
-        <button
-          className="button"
-          type="submit"
-          disabled={!this.state.username}
-        >
+        <button className="button" type="submit" disabled={!username}>
           Submit
         </button>
       </form>
@@ -75,28 +70,25 @@ class Battle extends React.Component {
     this.handleReset = this.handleReset.bind(this);
   }
   handleSubmit(id, username) {
-    this.setState(function() {
-      var newState = {};
-      newState[id + "Name"] = username;
-      newState[id + "Image"] =
-        "https://github.com/" + username + ".png?size=200";
-      return newState;
-    });
+    this.setState(() => ({
+      [id + "Name"]: username,
+      [id + "Image"]: `https://github.com/${username}.png?size=200`
+    }));
   }
   handleReset(id) {
-    this.setState(function() {
-      var newState = {};
-      newState[id + "Name"] = "";
-      newState[id + "Image"] = null;
-      return newState;
-    });
+    this.setState(() => ({
+      [id + "Name"]: "",
+      [id + "Image"]: null
+    }));
   }
   render() {
-    var match = this.props.match;
-    var playerOneName = this.state.playerOneName;
-    var playerTwoName = this.state.playerTwoName;
-    var playerOneImage = this.state.playerOneImage;
-    var playerTwoImage = this.state.playerTwoImage;
+    const { match } = this.props;
+    const {
+      playerOneName,
+      playerTwoName,
+      playerOneImage,
+      playerTwoImage
+    } = this.state;
 
     return (
       <div>
@@ -113,7 +105,7 @@ class Battle extends React.Component {
             <PlayerPreview avatar={playerOneImage} username={playerOneName}>
               <button
                 className="reset"
-                onClick={this.handleReset.bind(null, "PlayerOne")}
+                onClick={() => this.handleReset("PlayerOne")}
               >
                 Reset
               </button>
@@ -130,7 +122,7 @@ class Battle extends React.Component {
             <PlayerPreview avatar={playerTwoImage} username={playerTwoName}>
               <button
                 className="reset"
-                onClick={this.handleReset.bind(null, "PlayerTwo")}
+                onClick={() => this.handleReset("PlayerTwo")}
               >
                 Reset
               </button>
@@ -143,11 +135,7 @@ class Battle extends React.Component {
             className="button"
             to={{
               pathname: match.url + "/results",
-              search:
-                `?playerOneName=` +
-                playerOneName +
-                "&playerTwoName=" +
-                playerTwoName
+              search: `?playerOneName=${playerOneName}&playerTwoName=${playerTwoName}`
             }}
           >
             Battle
