@@ -70,25 +70,47 @@ LanguagesNav.propTypes = {
 export default class Popular extends React.Component {
   state = {
     selectedLanguage: 'All',
-    repos: null
+    repos: {},
+    error: null
   };
 
   componentDidMount() {
     this.updateLanguage(this.state.selectedLanguage);
   }
 
-  updateLanguage = async lang => {
+  updateLanguage = async selectedLanguage => {
     this.setState(() => ({
-      selectedLanguage: lang,
-      repos: null
+      selectedLanguage,
+      error: null
     }));
 
-    const repos = await fetchPopularRepos(lang);
-    this.setState(() => ({ repos }));
+    // if selectedLanguage doesn't already exist in repos object
+    if (!this.state.repos[selectedLanguage]) {
+      const newRepos = await fetchPopularRepos(selectedLanguage);
+      try {
+        this.setState(({ repos }) => ({
+          repos: {
+            ...repos,
+            [selectedLanguage]: newRepos
+          },
+          error: null
+        }));
+      } catch (err) {
+        console.warn('Error fetching repos: ', err);
+        this.setState(() => ({
+          error: 'There was an error fetching the repositories.'
+        }));
+      }
+    }
   };
 
+  isLoading() {
+    const { selectedLanguage, repos, error } = this.state;
+    return !repos[selectedLanguage] && error === null;
+  }
+
   render() {
-    const { selectedLanguage, repos } = this.state;
+    const { selectedLanguage, repos, error } = this.state;
 
     return (
       <>
@@ -96,10 +118,10 @@ export default class Popular extends React.Component {
           selected={selectedLanguage}
           onUpdateLanguage={this.updateLanguage}
         />
-        {!repos ? (
-          <Loading text="Fetching Repos" />
-        ) : (
-          <ReposGrid repos={repos} />
+        {this.isLoading() && <Loading text="Fetching Repos" />}
+        {error && <p>{error}</p>}
+        {repos[selectedLanguage] && (
+          <ReposGrid repos={repos[selectedLanguage]} />
         )}
       </>
     );
