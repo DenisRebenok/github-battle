@@ -54,24 +54,26 @@ class PlayerInput extends Component {
   };
   render() {
     const { username } = this.state;
-    const { label } = this.props;
 
     return (
-      <form className="column" onSubmit={this.handleSubmit}>
-        <label htmlFor="username" className="header">
-          {label}
+      <form className="column player" onSubmit={this.handleSubmit}>
+        <label htmlFor="username" className="player-label">
+          {this.props.label}
         </label>
-        <input
-          type="text"
-          id="username"
-          placeholder="github username"
-          autoComplete="off"
-          value={username}
-          onChange={this.handleChange}
-        />
-        <button className="button" type="submit" disabled={!username}>
-          Submit
-        </button>
+        <div className="row player-inputs">
+          <input
+            type="text"
+            id="username"
+            className="input-light"
+            placeholder="github username"
+            autoComplete="off"
+            value={username}
+            onChange={this.handleChange}
+          />
+          <button className="btn dark-btn" type="submit" disabled={!username}>
+            Submit
+          </button>
+        </div>
       </form>
     );
   }
@@ -79,74 +81,70 @@ class PlayerInput extends Component {
 
 export default class Battle extends Component {
   state = {
-    playerOneName: '',
-    playerTwoName: '',
-    playerOneImage: null,
-    playerTwoImage: null
+    playerOne: null,
+    playerTwo: null
   };
-  handleSubmit = (id, username) => {
-    this.setState(() => ({
-      [id + 'Name']: username,
-      [id + 'Image']: `https://github.com/${username}.png?size=200`
-    }));
+
+  handleSubmit = (id, player) => {
+    this.setState({
+      [id]: player
+    });
   };
-  handleReset = id => {
-    this.setState(() => ({
-      [id + 'Name']: '',
-      [id + 'Image']: null
-    }));
-  };
+
+  // handleReset = id => {
+  //   this.setState(() => ({
+  //     [id]: '',
+  //     [id]: null
+  //   }));
+  // };
+
   render() {
-    const { match } = this.props;
-    const {
-      playerOneName,
-      playerTwoName,
-      playerOneImage,
-      playerTwoImage
-    } = this.state;
+    // const { match } = this.props;
+    const { playerOne, playerTwo } = this.state;
 
     return (
       <>
         <Instructions />
-        <div className="row">
-          {!playerOneName && (
-            <PlayerInput
-              id="playerOne"
-              label="Player One"
-              onSubmit={this.handleSubmit}
-            />
-          )}
+        <div className="players-container">
+          <h1 className="center-text header-lg">Players</h1>
+          <div className="row space-around">
+            {playerOne === null && (
+              <PlayerInput
+                label="Player One"
+                onSubmit={player => this.handleSubmit('playerOne', player)}
+              />
+            )}
 
-          {playerOneImage !== null && (
-            <PlayerPreview avatar={playerOneImage} username={playerOneName}>
-              <button
-                className="reset"
-                onClick={() => this.handleReset('PlayerOne')}
-              >
-                Reset
-              </button>
-            </PlayerPreview>
-          )}
-          {!playerTwoName && (
-            <PlayerInput
-              id="playerTwo"
-              label="Player Two"
-              onSubmit={this.handleSubmit}
-            />
-          )}
-          {playerTwoImage !== null && (
-            <PlayerPreview avatar={playerTwoImage} username={playerTwoName}>
-              <button
-                className="reset"
-                onClick={() => this.handleReset('PlayerTwo')}
-              >
-                Reset
-              </button>
-            </PlayerPreview>
-          )}
+            {/* {playerOneImage !== null && (
+              <PlayerPreview avatar={playerOneImage} username={playerOneName}>
+                <button
+                  className="reset"
+                  onClick={() => this.handleReset('PlayerOne')}
+                >
+                  Reset
+                </button>
+              </PlayerPreview>
+            )} */}
+            {playerTwo === null && (
+              <PlayerInput
+                label="Player Two"
+                onSubmit={player => this.handleSubmit('playerTwo', player)}
+              />
+            )}
+            {/* {playerTwoImage !== null && (
+              <PlayerPreview avatar={playerTwoImage} username={playerTwoName}>
+                <button
+                  className="reset"
+                  onClick={() => this.handleReset('PlayerTwo')}
+                >
+                  Reset
+                </button>
+              </PlayerPreview>
+            )} */}
+          </div>
         </div>
 
-        {playerOneImage && playerTwoImage && (
+        {/* {playerOne && playerTwo && (
           <Link
             className="button"
             to={{
@@ -156,7 +154,7 @@ export default class Battle extends Component {
           >
             Battle
           </Link>
-        )}
+        )} */}
       </>
     );
   }
