@@ -1,5 +1,5 @@
-const id = "25998991c1faf17e2ccf";
-const sec = "a89f618eb33d214a94f28a70e21913543e525c35";
+const id = '25998991c1faf17e2ccf';
+const sec = 'a89f618eb33d214a94f28a70e21913543e525c35';
 const params = `?client_id=${id}&client_secret=${sec}`;
 
 async function getProfile(username) {
@@ -49,9 +49,9 @@ function sortPlayers(players) {
 }
 
 export async function battle(players) {
-  const results = Promise.all(players.map(getUserData)).catch(handleError);
-
-  return results === null ? results : sortPlayers(results);
+  return Promise.all(players.map(getUserData))
+    .then(results => sortPlayers(results))
+    .catch(handleError);
 }
 
 export async function fetchPopularRepos(language) {

@@ -7,6 +7,7 @@ import {
   FaTrophy,
   FaTimesCircle
 } from 'react-icons/fa';
+import Results from './Results';
 // import PlayerPreview from './PlayerPreview';
 
 function Instructions() {
@@ -115,7 +116,8 @@ PlayerPreview.propTypes = {
 export default class Battle extends Component {
   state = {
     playerOne: null,
-    playerTwo: null
+    playerTwo: null,
+    battle: false
   };
 
   handleSubmit = (id, player) => {
@@ -132,7 +134,11 @@ export default class Battle extends Component {
 
   render() {
     // const { match } = this.props;
-    const { playerOne, playerTwo } = this.state;
+    const { playerOne, playerTwo, battle } = this.state;
+
+    if (battle === true) {
+      return <Results playerOne={playerOne} playerTwo={playerTwo} />;
+    }
 
     return (
       <>
@@ -166,19 +172,20 @@ export default class Battle extends Component {
               />
             )}
           </div>
-        </div>
 
-        {/* {playerOne && playerTwo && (
-          <Link
-            className="button"
-            to={{
-              pathname: match.url + '/results',
-              search: `?playerOneName=${playerOneName}&playerTwoName=${playerTwoName}`
-            }}
-          >
-            Battle
-          </Link>
-        )} */}
+          {playerOne && playerTwo && (
+            <button
+              className="btn dark-btn btn-space"
+              onClick={() => this.setState({ battle: true })}
+              // to={{
+              //   pathname: match.url + '/results',
+              //   search: `?playerOneName=${playerOneName}&playerTwoName=${playerTwoName}`
+              // }}
+            >
+              Battle
+            </button>
+          )}
+        </div>
       </>
     );
   }

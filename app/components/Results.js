@@ -1,52 +1,90 @@
-import React from "react";
-import PropTypes from "prop-types";
-import queryString from "query-string";
-import { battle } from "../utils/api";
-import { Link } from "react-router-dom";
-import PlayerPreview from "./PlayerPreview";
-import Loading from "./Loading";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+// import queryString from 'query-string';
+import { battle } from '../utils/api';
+import {
+  FaCompass,
+  FaBriefcase,
+  FaUsers,
+  FaUserFriends,
+  FaCode,
+  FaUser
+} from 'react-icons/fa';
+import Card from './Card';
+// import { Link } from 'react-router-dom';
+// import PlayerPreview from './PlayerPreview';
+import Loading from './Loading';
 
-function Profile({ info }) {
+// function Profile({ info }) {
+//   return (
+//     <PlayerPreview avatar={info.avatar_url} username={info.login}>
+//       <ul className="space-list-items">
+//         {info.name && <li>{info.name}</li>}
+//         {info.location && <li>{info.location}</li>}
+//         {info.company && <li>{info.company}</li>}
+//         <li>Followers: {info.followers}</li>
+//         <li>Following: {info.following}</li>
+//         <li>Public Repos: {info.public_repos}</li>
+//         {info.blog && (
+//           <li>
+//             <a href={info.blog}>{info.blog}</a>
+//           </li>
+//         )}
+//       </ul>
+//     </PlayerPreview>
+//   );
+// }
+
+// Profile.propTypes = {
+//   info: PropTypes.object.isRequired
+// };
+
+function PlayerCard({ label, score, profile }) {
   return (
-    <PlayerPreview avatar={info.avatar_url} username={info.login}>
-      <ul className="space-list-items">
-        {info.name && <li>{info.name}</li>}
-        {info.location && <li>{info.location}</li>}
-        {info.company && <li>{info.company}</li>}
-        <li>Followers: {info.followers}</li>
-        <li>Following: {info.following}</li>
-        <li>Public Repos: {info.public_repos}</li>
-        {info.blog && (
+    <Card
+      header={label}
+      subheader={`Score: ${score.toLocaleString()}`}
+      avatar={profile.avatar_url}
+      href={profile.html_url}
+      name={profile.login}
+    >
+      <ul className="card-list">
+        <li>
+          <FaUser color="rgb(239, 115, 115)" size={22} />
+          {profile.name}
+        </li>
+        {profile.location && (
           <li>
-            <a href={info.blog}>{info.blog}</a>
+            <FaCompass color="rgb(144, 115, 255)" size={22} />
+            {profile.location}
           </li>
         )}
+        {profile.company && (
+          <li>
+            <FaBriefcase color="#795548" size={22} />
+            {profile.company}
+          </li>
+        )}
+        <li>
+          <FaUsers color="rgb(129, 195, 245)" size={22} />
+          {profile.followers.toLocaleString()} followers
+        </li>
+        <li>
+          <FaUserFriends color="rgb(64, 183, 95)" size={22} />
+          {profile.following.toLocaleString()} following
+        </li>
       </ul>
-    </PlayerPreview>
+    </Card>
   );
 }
 
-Profile.propTypes = {
-  info: PropTypes.object.isRequired
-};
-
-function Player({ label, score, profile }) {
-  return (
-    <div>
-      <h1 className="header">{label}</h1>
-      <h3 style={{ textAlign: "center" }}>Score: {score}</h3>
-      <Profile info={profile} />
-    </div>
-  );
-}
-
-Player.propTypes = {
+PlayerCard.propTypes = {
   label: PropTypes.string.isRequired,
   score: PropTypes.number.isRequired,
   profile: PropTypes.object.isRequired
 };
 
-class Results extends React.Component {
+export default class Results extends Component {
   state = {
     winner: null,
     loser: null,
@@ -54,26 +92,24 @@ class Results extends React.Component {
     loading: true
   };
   async componentDidMount() {
-    const { playerOneName, playerTwoName } = queryString.parse(
-      this.props.location.search
-    );
+    const { playerOne, playerTwo } = this.props;
 
-    const players = await battle([playerOneName, playerTwoName]);
+    const players = await battle([playerOne, playerTwo]);
 
     if (players === null) {
       return this.setState(() => ({
         error:
-          "Looks like there was error. Check that both users exist on Github",
+          'Looks like there was error. Check that both users exist on Github',
         loading: false
       }));
     }
 
-    this.setState(() => ({
+    this.setState({
       error: null,
       winner: players[0],
       loser: players[1],
       loading: false
-    }));
+    });
   }
   render() {
     const { error, winner, loser, loading } = this.state;
@@ -85,19 +121,25 @@ class Results extends React.Component {
     if (error) {
       return (
         <div>
-          <p>{error}</p>
-          <Link to="/battle">Reset</Link>
+          <p className="center-text error">{error}</p>
+          {/* <Link to="/battle">Reset</Link> */}
         </div>
       );
     }
 
     return (
-      <div className="row">
-        <Player label="Winner" score={winner.score} profile={winner.profile} />
-        <Player label="Loser" score={loser.score} profile={loser.profile} />
+      <div className="grid space-around container-sm">
+        <PlayerCard
+          label={winner.score === loser.score ? 'Tie' : 'Winner'}
+          score={winner.score}
+          profile={winner.profile}
+        />
+        <PlayerCard
+          label={winner.score === loser.score ? 'Tie' : 'Loser'}
+          score={loser.score}
+          profile={loser.profile}
+        />
       </div>
     );
   }
 }
-
-export default Results;
