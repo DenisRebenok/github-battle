@@ -1,17 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { fetchPopularRepos } from '../utils/api';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { fetchPopularRepos } from '../utils/api'
 import {
   FaUser,
   FaStar,
   FaCodeBranch,
   FaExclamationTriangle
-} from 'react-icons/fa';
-import Loading from './Loading';
-import Card from './Card';
+} from 'react-icons/fa'
+import Loading from './Loading'
+import Card from './Card'
+import Tooltip from './Tooltip'
 
 function LanguagesNav({ selected, onUpdateLanguage }) {
-  const languages = ['All', 'JavaScript', 'Ruby', 'Java', 'CSS', 'Python'];
+  const languages = ['All', 'JavaScript', 'Ruby', 'Java', 'CSS', 'Python']
 
   return (
     <ul className="flex-center">
@@ -27,13 +28,13 @@ function LanguagesNav({ selected, onUpdateLanguage }) {
         </li>
       ))}
     </ul>
-  );
+  )
 }
 
 LanguagesNav.propTypes = {
   selected: PropTypes.string.isRequired,
   onUpdateLanguage: PropTypes.func.isRequired
-};
+}
 
 function ReposGrid({ repos }) {
   return (
@@ -46,8 +47,8 @@ function ReposGrid({ repos }) {
           html_url,
           forks,
           open_issues
-        } = repo;
-        const { login, avatar_url } = owner;
+        } = repo
+        const { login, avatar_url } = owner
 
         return (
           <li key={html_url}>
@@ -59,8 +60,10 @@ function ReposGrid({ repos }) {
             >
               <ul className="card-list">
                 <li>
-                  <FaUser color="rgb(255, 191, 116)" size={22} />
-                  <a href={`https://github.com/${login}`}>{login}</a>
+                  <Tooltip text="Github username">
+                    <FaUser color="rgb(255, 191, 116)" size={22} />
+                    <a href={`https://github.com/${login}`}>{login}</a>
+                  </Tooltip>
                 </li>
                 <li>
                   <FaStar color="rgb(255, 215, 0)" size={22} />
@@ -77,36 +80,36 @@ function ReposGrid({ repos }) {
               </ul>
             </Card>
           </li>
-        );
+        )
       })}
     </ul>
-  );
+  )
 }
 
 ReposGrid.propTypes = {
   repos: PropTypes.array.isRequired
-};
+}
 
 export default class Popular extends React.Component {
   state = {
     selectedLanguage: 'All',
     repos: {},
     error: null
-  };
+  }
 
   componentDidMount() {
-    this.updateLanguage(this.state.selectedLanguage);
+    this.updateLanguage(this.state.selectedLanguage)
   }
 
   updateLanguage = async selectedLanguage => {
     this.setState(() => ({
       selectedLanguage,
       error: null
-    }));
+    }))
 
     // if selectedLanguage doesn't already exist in repos object
     if (!this.state.repos[selectedLanguage]) {
-      const newRepos = await fetchPopularRepos(selectedLanguage);
+      const newRepos = await fetchPopularRepos(selectedLanguage)
       try {
         this.setState(({ repos }) => ({
           repos: {
@@ -114,23 +117,23 @@ export default class Popular extends React.Component {
             [selectedLanguage]: newRepos
           },
           error: null
-        }));
+        }))
       } catch (err) {
-        console.warn('Error fetching repos: ', err);
+        console.warn('Error fetching repos: ', err)
         this.setState(() => ({
           error: 'There was an error fetching the repositories.'
-        }));
+        }))
       }
     }
-  };
+  }
 
   isLoading() {
-    const { selectedLanguage, repos, error } = this.state;
-    return !repos[selectedLanguage] && error === null;
+    const { selectedLanguage, repos, error } = this.state
+    return !repos[selectedLanguage] && error === null
   }
 
   render() {
-    const { selectedLanguage, repos, error } = this.state;
+    const { selectedLanguage, repos, error } = this.state
 
     return (
       <>
@@ -144,6 +147,6 @@ export default class Popular extends React.Component {
           <ReposGrid repos={repos[selectedLanguage]} />
         )}
       </>
-    );
+    )
   }
 }

@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 // import queryString from 'query-string';
-import { battle } from '../utils/api';
 import {
   FaCompass,
   FaBriefcase,
@@ -9,11 +8,14 @@ import {
   FaUserFriends,
   FaCode,
   FaUser
-} from 'react-icons/fa';
-import Card from './Card';
+} from 'react-icons/fa'
+import { styles } from 'ansi-colors'
+import { battle } from '../utils/api'
+import Card from './Card'
 // import { Link } from 'react-router-dom';
 // import PlayerPreview from './PlayerPreview';
-import Loading from './Loading';
+import Loading from './Loading'
+import Tooltip from './Tooltip'
 
 function ProfileList({ profile }) {
   return (
@@ -24,14 +26,18 @@ function ProfileList({ profile }) {
       </li>
       {profile.location && (
         <li>
-          <FaCompass color="rgb(144, 115, 255)" size={22} />
-          {profile.location}
+          <Tooltip text="User's location">
+            <FaCompass color="rgb(144, 115, 255)" size={22} />
+            {profile.location}
+          </Tooltip>
         </li>
       )}
       {profile.company && (
         <li>
-          <FaBriefcase color="#795548" size={22} />
-          {profile.company}
+          <Tooltip text="User's company">
+            <FaBriefcase color="#795548" size={22} />
+            {profile.company}
+          </Tooltip>
         </li>
       )}
       <li>
@@ -43,30 +49,37 @@ function ProfileList({ profile }) {
         {profile.following.toLocaleString()} following
       </li>
     </ul>
-  );
+  )
 }
 ProfileList.propTypes = {
   profile: PropTypes.object.isRequired
-};
+}
 
 export default class Results extends Component {
+  static propTypes = {
+    playerOne: PropTypes.string.isRequired,
+    playerTwo: PropTypes.string.isRequired,
+    onReset: PropTypes.func.isRequired
+  }
+
   state = {
     winner: null,
     loser: null,
     error: null,
     loading: true
-  };
-  async componentDidMount() {
-    const { playerOne, playerTwo } = this.props;
+  }
 
-    const players = await battle([playerOne, playerTwo]);
+  async componentDidMount() {
+    const { playerOne, playerTwo } = this.props
+
+    const players = await battle([playerOne, playerTwo])
 
     if (players === null) {
       return this.setState(() => ({
         error:
           'Looks like there was error. Check that both users exist on Github',
         loading: false
-      }));
+      }))
     }
 
     this.setState({
@@ -74,13 +87,13 @@ export default class Results extends Component {
       winner: players[0],
       loser: players[1],
       loading: false
-    });
+    })
   }
   render() {
-    const { error, winner, loser, loading } = this.state;
+    const { error, winner, loser, loading } = this.state
 
     if (loading === true) {
-      return <Loading text="Battling" />;
+      return <Loading text="Battling" />
     }
 
     if (error) {
@@ -89,7 +102,7 @@ export default class Results extends Component {
           <p className="center-text error">{error}</p>
           {/* <Link to="/battle">Reset</Link> */}
         </div>
-      );
+      )
     }
 
     return (
@@ -118,12 +131,6 @@ export default class Results extends Component {
           Reset
         </button>
       </>
-    );
+    )
   }
 }
-
-Results.propTypes = {
-  playerOne: PropTypes.string.isRequired,
-  playerTwo: PropTypes.string.isRequired,
-  onReset: PropTypes.func.isRequired
-};
