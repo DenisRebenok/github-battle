@@ -15,72 +15,37 @@ import Card from './Card';
 // import PlayerPreview from './PlayerPreview';
 import Loading from './Loading';
 
-// function Profile({ info }) {
-//   return (
-//     <PlayerPreview avatar={info.avatar_url} username={info.login}>
-//       <ul className="space-list-items">
-//         {info.name && <li>{info.name}</li>}
-//         {info.location && <li>{info.location}</li>}
-//         {info.company && <li>{info.company}</li>}
-//         <li>Followers: {info.followers}</li>
-//         <li>Following: {info.following}</li>
-//         <li>Public Repos: {info.public_repos}</li>
-//         {info.blog && (
-//           <li>
-//             <a href={info.blog}>{info.blog}</a>
-//           </li>
-//         )}
-//       </ul>
-//     </PlayerPreview>
-//   );
-// }
-
-// Profile.propTypes = {
-//   info: PropTypes.object.isRequired
-// };
-
-function PlayerCard({ label, score, profile }) {
+function ProfileList({ profile }) {
   return (
-    <Card
-      header={label}
-      subheader={`Score: ${score.toLocaleString()}`}
-      avatar={profile.avatar_url}
-      href={profile.html_url}
-      name={profile.login}
-    >
-      <ul className="card-list">
+    <ul className="card-list">
+      <li>
+        <FaUser color="rgb(239, 115, 115)" size={22} />
+        {profile.name}
+      </li>
+      {profile.location && (
         <li>
-          <FaUser color="rgb(239, 115, 115)" size={22} />
-          {profile.name}
+          <FaCompass color="rgb(144, 115, 255)" size={22} />
+          {profile.location}
         </li>
-        {profile.location && (
-          <li>
-            <FaCompass color="rgb(144, 115, 255)" size={22} />
-            {profile.location}
-          </li>
-        )}
-        {profile.company && (
-          <li>
-            <FaBriefcase color="#795548" size={22} />
-            {profile.company}
-          </li>
-        )}
+      )}
+      {profile.company && (
         <li>
-          <FaUsers color="rgb(129, 195, 245)" size={22} />
-          {profile.followers.toLocaleString()} followers
+          <FaBriefcase color="#795548" size={22} />
+          {profile.company}
         </li>
-        <li>
-          <FaUserFriends color="rgb(64, 183, 95)" size={22} />
-          {profile.following.toLocaleString()} following
-        </li>
-      </ul>
-    </Card>
+      )}
+      <li>
+        <FaUsers color="rgb(129, 195, 245)" size={22} />
+        {profile.followers.toLocaleString()} followers
+      </li>
+      <li>
+        <FaUserFriends color="rgb(64, 183, 95)" size={22} />
+        {profile.following.toLocaleString()} following
+      </li>
+    </ul>
   );
 }
-
-PlayerCard.propTypes = {
-  label: PropTypes.string.isRequired,
-  score: PropTypes.number.isRequired,
+ProfileList.propTypes = {
   profile: PropTypes.object.isRequired
 };
 
@@ -129,16 +94,24 @@ export default class Results extends Component {
 
     return (
       <div className="grid space-around container-sm">
-        <PlayerCard
-          label={winner.score === loser.score ? 'Tie' : 'Winner'}
-          score={winner.score}
-          profile={winner.profile}
-        />
-        <PlayerCard
-          label={winner.score === loser.score ? 'Tie' : 'Loser'}
-          score={loser.score}
-          profile={loser.profile}
-        />
+        <Card
+          header={winner.score === loser.score ? 'Tie' : 'Winner'}
+          subheader={`Score: ${winner.score.toLocaleString()}`}
+          avatar={winner.profile.avatar_url}
+          href={winner.profile.html_url}
+          name={winner.profile.login}
+        >
+          <ProfileList profile={winner.profile} />
+        </Card>
+        <Card
+          header={loser.score === loser.score ? 'Tie' : 'Loser'}
+          subheader={`Score: ${loser.score.toLocaleString()}`}
+          avatar={loser.profile.avatar_url}
+          href={loser.profile.html_url}
+          name={loser.profile.login}
+        >
+          <ProfileList profile={loser.profile} />
+        </Card>
       </div>
     );
   }
