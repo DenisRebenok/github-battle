@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 import {
   FaUserFriends,
   FaFighterJet,
   FaTrophy,
   FaTimesCircle
-} from 'react-icons/fa';
-import Results from './Results';
+} from 'react-icons/fa'
+import Results from './Results'
 // import PlayerPreview from './PlayerPreview';
 
 function Instructions() {
@@ -33,33 +33,32 @@ function Instructions() {
         </li>
       </ol>
     </div>
-  );
+  )
 }
 
 class PlayerInput extends Component {
   static propTypes = {
-    id: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
     onSubmit: PropTypes.func.isRequired
-  };
+  }
   static defaultProps = {
     label: 'Username'
-  };
+  }
   state = {
     username: ''
-  };
+  }
   handleChange = event => {
-    const value = event.target.value;
+    const value = event.target.value
 
-    this.setState(() => ({ username: value }));
-  };
+    this.setState(() => ({ username: value }))
+  }
   handleSubmit = event => {
-    event.preventDefault();
+    event.preventDefault()
 
-    this.props.onSubmit(this.state.username);
-  };
+    this.props.onSubmit(this.state.username)
+  }
   render() {
-    const { username } = this.state;
+    const { username } = this.state
 
     return (
       <form className="column player" onSubmit={this.handleSubmit}>
@@ -81,7 +80,7 @@ class PlayerInput extends Component {
           </button>
         </div>
       </form>
-    );
+    )
   }
 }
 
@@ -105,36 +104,36 @@ function PlayerPreview({ username, onReset, label }) {
         </button>
       </div>
     </div>
-  );
+  )
 }
 PlayerPreview.propTypes = {
   username: PropTypes.string.isRequired,
   onReset: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired
-};
+}
 
 export default class Battle extends Component {
   state = {
     playerOne: null,
     playerTwo: null,
     battle: false
-  };
+  }
 
   handleSubmit = (id, player) => {
     this.setState({
       [id]: player
-    });
-  };
+    })
+  }
 
   handleReset = id => {
     this.setState({
       [id]: null
-    });
-  };
+    })
+  }
 
   render() {
     // const { match } = this.props;
-    const { playerOne, playerTwo, battle } = this.state;
+    const { playerOne, playerTwo, battle } = this.state
 
     if (battle === true) {
       return (
@@ -149,7 +148,7 @@ export default class Battle extends Component {
             })
           }
         />
-      );
+      )
     }
 
     return (
@@ -199,6 +198,6 @@ export default class Battle extends Component {
           )}
         </div>
       </>
-    );
+    )
   }
 }
