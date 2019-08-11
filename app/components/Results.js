@@ -13,7 +13,6 @@ import { styles } from 'ansi-colors'
 import { battle } from '../utils/api'
 import Card from './Card'
 import { Link } from 'react-router-dom'
-// import PlayerPreview from './PlayerPreview';
 import Loading from './Loading'
 import Tooltip from './Tooltip'
 
