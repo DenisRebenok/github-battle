@@ -140,8 +140,7 @@ PlayerPreview.propTypes = {
 export default class Battle extends Component {
   state = {
     playerOne: null,
-    playerTwo: null,
-    battle: false
+    playerTwo: null
   }
 
   handleSubmit = (id, player) => {
@@ -157,24 +156,7 @@ export default class Battle extends Component {
   }
 
   render() {
-    // const { match } = this.props;
-    const { playerOne, playerTwo, battle } = this.state
-
-    if (battle === true) {
-      return (
-        <Results
-          playerOne={playerOne}
-          playerTwo={playerTwo}
-          onReset={() =>
-            this.setState({
-              playerOne: null,
-              playerTwo: null,
-              battle: false
-            })
-          }
-        />
-      )
-    }
+    const { playerOne, playerTwo } = this.state
 
     return (
       <>
@@ -210,16 +192,15 @@ export default class Battle extends Component {
           </div>
 
           {playerOne && playerTwo && (
-            <button
+            <Link
               className="btn dark-btn btn-space"
-              onClick={() => this.setState({ battle: true })}
-              // to={{
-              //   pathname: match.url + '/results',
-              //   search: `?playerOneName=${playerOneName}&playerTwoName=${playerTwoName}`
-              // }}
+              to={{
+                pathname: '/battle/results',
+                search: `?playerOne=${playerOne}&playerTwo=${playerTwo}`
+              }}
             >
               Battle
-            </button>
+            </Link>
           )}
         </div>
       </>

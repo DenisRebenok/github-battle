@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-// import queryString from 'query-string';
+import queryString from 'query-string'
 import {
   FaCompass,
   FaBriefcase,
@@ -12,7 +12,7 @@ import {
 import { styles } from 'ansi-colors'
 import { battle } from '../utils/api'
 import Card from './Card'
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 // import PlayerPreview from './PlayerPreview';
 import Loading from './Loading'
 import Tooltip from './Tooltip'
@@ -56,12 +56,6 @@ ProfileList.propTypes = {
 }
 
 export default class Results extends Component {
-  static propTypes = {
-    playerOne: PropTypes.string.isRequired,
-    playerTwo: PropTypes.string.isRequired,
-    onReset: PropTypes.func.isRequired
-  }
-
   state = {
     winner: null,
     loser: null,
@@ -70,7 +64,9 @@ export default class Results extends Component {
   }
 
   async componentDidMount() {
-    const { playerOne, playerTwo } = this.props
+    const { playerOne, playerTwo } = queryString.parse(
+      this.props.location.search
+    )
 
     const players = await battle([playerOne, playerTwo])
 
@@ -127,9 +123,9 @@ export default class Results extends Component {
             <ProfileList profile={loser.profile} />
           </Card>
         </div>
-        <button onClick={this.props.onReset} className="btn dark-btn btn-space">
+        <Link to="/battle" className="btn dark-btn btn-space">
           Reset
-        </button>
+        </Link>
       </>
     )
   }

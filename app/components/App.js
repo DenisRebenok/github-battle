@@ -24,7 +24,8 @@ class App extends React.Component {
             <div className="container">
               <Nav />
               <Route exact path="/" component={Popular} />
-              <Route path="/battle" component={Battle} />
+              <Route exact path="/battle" component={Battle} />
+              <Route path="/battle/results" component={Results} />
             </div>
             {/* <Switch>
               <Route exact path="/" component={Home} />
