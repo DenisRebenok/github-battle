@@ -127,7 +127,7 @@ export default class Popular extends React.Component {
     }
   }
 
-  isLoading() {
+  isLoading = () => {
     const { selectedLanguage, repos, error } = this.state
     return !repos[selectedLanguage] && error === null
   }

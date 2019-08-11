@@ -57,19 +57,20 @@ class PlayerInput extends Component {
   static defaultProps = {
     label: 'Username'
   }
-  state = {
-    username: ''
-  }
+  state = { username: '' }
+
   handleChange = event => {
     const value = event.target.value
 
     this.setState(() => ({ username: value }))
   }
+
   handleSubmit = event => {
     event.preventDefault()
 
     this.props.onSubmit(this.state.username)
   }
+
   render() {
     const { username } = this.state
 
