@@ -20,9 +20,11 @@ class App extends React.Component {
     return (
       <ThemeProvider value={this.state}>
         {/* <Router> */}
-        <div id="app" className="container">
-          {/* <Nav /> */}
-          <Battle />
+        <div id="app" className={this.state.theme}>
+          <div className="container">
+            <Nav />
+            <Battle />
+          </div>
           {/* <Switch>
               <Route exact path="/" component={Home} />
               <Route exact path="/battle" component={Battle} />
