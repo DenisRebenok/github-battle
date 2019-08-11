@@ -23,7 +23,7 @@ class App extends React.Component {
         <div id="app" className={this.state.theme}>
           <div className="container">
             <Nav />
-            <Battle />
+            <Popular />
           </div>
           {/* <Switch>
               <Route exact path="/" component={Home} />
