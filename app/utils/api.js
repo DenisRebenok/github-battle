@@ -28,11 +28,6 @@ function calculateScore({ followers }, repos) {
   return followers * 3 + getStarCount(repos)
 }
 
-function handleError(error) {
-  console.warn(error)
-  return null
-}
-
 async function getUserData(player) {
   const [profile, repos] = await Promise.all([
     getProfile(player),
@@ -48,10 +43,10 @@ function sortPlayers(players) {
   return players.sort((a, b) => b.score - a.score)
 }
 
-export async function battle(players) {
-  return Promise.all(players.map(getUserData))
-    .then(results => sortPlayers(results))
-    .catch(handleError)
+export function battle(players) {
+  return Promise.all(players.map(getUserData)).then(results =>
+    sortPlayers(results)
+  )
 }
 
 export function fetchPopularRepos(language) {
